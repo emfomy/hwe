@@ -1,2 +1,2 @@
-# hwe
+# HWE
 Heterogeneous Word Embedding
