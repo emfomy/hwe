@@ -1,4 +1,4 @@
 # The CMake setting of 'ext'
 
-add_executable(word2vec word2vec/word2vec.c)
+add_executable(word2vec EXCLUDE_FROM_ALL word2vec/word2vec.c)
 hwe_set_target(word2vec)
