@@ -1,7 +1,7 @@
 # Set options
 
 option(HWE_BUILD_BIN  "Build binaries."        "ON")
-option(HWE_BUILD_DOC  "Build documentation."   "ON")
+option(HWE_BUILD_DOC  "Build documentation."   "OFF")
 
 # Set variables
 if(HWE_BUILD_BIN)
