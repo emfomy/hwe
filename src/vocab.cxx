@@ -25,7 +25,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#include "hwe.hxx"
+#include "def.hxx"
 #include "vocab.hxx"
 
 #include <iostream>
@@ -38,20 +38,12 @@
 //
 namespace hwe {
 
-VocabWord& VocabSet::operator[]( const string_t &word ) noexcept {
-  return vocab_[word];
-}
-
-VocabWord& VocabSet::operator[]( string_t &&word ) noexcept {
-  return vocab_[word];
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Learn vocabulary from training file.
 ///
 void VocabSet::LearnVocab( const string_t &train_file ) noexcept {
-  vocab_.clear();
-  word_.clear();
+  _vocab_.clear();
+  _word_.clear();
   train_words_ = 0;
 
   std::ifstream fin;
@@ -61,28 +53,28 @@ void VocabSet::LearnVocab( const string_t &train_file ) noexcept {
     exit(1);
   }
 
-  vocab_["</s>"];
+  _vocab_["</s>"];
   string_t word;
 
   while ( true ) {
     word = ReadWord(fin);
     if ( word == "" ) break;
-    if ( (debug_mode_ > 1) && (train_words_ % 100000 == 0) ) {
+    if ( (debug_mode > 1) && (train_words_ % 100000 == 0) ) {
       std::cout << (train_words_/1000) << "K\r" << std::flush;
     }
 
-    ++vocab_[word].count;
+    ++_vocab_[word].count;
     train_words_++;
 
-    if ( vocab_.size() > kMaxVocalNum ) {
+    if ( _vocab_.size() > kMaxVocalNum ) {
       ReduceVocab();
     }
   }
 
   SortVocab();
 
-  if ( debug_mode_ > 0 ) {
-    std::cout << "Vocab size:          " << vocab_.size() << std::endl
+  if ( debug_mode > 0 ) {
+    std::cout << "Vocab size:          " << _vocab_.size() << std::endl
               << "Words in train file: " << train_words_  << std::endl;
   }
 }
@@ -91,8 +83,8 @@ void VocabSet::LearnVocab( const string_t &train_file ) noexcept {
 /// Read vocabulary from file.
 ///
 void VocabSet::ReadVocab( const string_t &vocab_file ) noexcept {
-  vocab_.clear();
-  word_.clear();
+  _vocab_.clear();
+  _word_.clear();
   train_words_ = 0;
 
   std::ifstream fin;
@@ -102,7 +94,7 @@ void VocabSet::ReadVocab( const string_t &vocab_file ) noexcept {
     exit(1);
   }
 
-  vocab_["</s>"];
+  _vocab_["</s>"];
   string_t word;
   index_t count;
 
@@ -111,15 +103,15 @@ void VocabSet::ReadVocab( const string_t &vocab_file ) noexcept {
     if ( word == "" ) break;
 
     fin >> count;
-    vocab_[word].count = count;
+    _vocab_[word].count = count;
     train_words_ += count;
     fin.get();
   }
 
   SortVocab();
 
-  if ( debug_mode_ > 0 ) {
-    std::cout << "Vocab size:          " << vocab_.size() << std::endl
+  if ( debug_mode > 0 ) {
+    std::cout << "Vocab size:          " << _vocab_.size() << std::endl
               << "Words in train file: " << train_words_  << std::endl;
   }
 }
@@ -128,12 +120,12 @@ void VocabSet::ReadVocab( const string_t &vocab_file ) noexcept {
 /// Save vocabulary into file.
 ///
 void VocabSet::SaveVocab( const string_t &vocab_file ) noexcept {
-  assert(vocab_.size() == word_.size());
+  assert(_vocab_.size() == _word_.size());
 
   std::ofstream fout;
   fout.open(vocab_file);
-  for ( const auto &word : word_ ) {
-    fout << word << " " << vocab_.at(word).count << "\n";
+  for ( const auto &word : _word_ ) {
+    fout << word << " " << _vocab_.at(word).count << "\n";
   }
 }
 
@@ -164,10 +156,10 @@ string_t VocabSet::ReadWord( std::istream &fin ) noexcept {
 /// Reduces the vocabulary by removing infrequent tokens.
 ///
 void VocabSet::ReduceVocab() noexcept {
-  for ( auto it = vocab_.cbegin(); it != vocab_.cend(); ){
+  for ( auto it = _vocab_.cbegin(); it != _vocab_.cend(); ){
     if ( it->second.count < min_reduce_ ) {
       train_words_ -= it->second.count;
-      it = vocab_.erase(it);
+      it = _vocab_.erase(it);
     } else {
       ++it;
     }
@@ -179,27 +171,27 @@ void VocabSet::ReduceVocab() noexcept {
 /// Sorts the vocabulary by frequency using word counts.
 ///
 void VocabSet::SortVocab() noexcept {
-  for ( auto it = vocab_.cbegin(); it != vocab_.cend(); ){
+  for ( auto it = _vocab_.cbegin(); it != _vocab_.cend(); ){
     if ( it->second.count < min_count_ ) {
       train_words_ -= it->second.count;
-      it = vocab_.erase(it);
+      it = _vocab_.erase(it);
     } else {
       ++it;
     }
   }
 
-  word_.reserve(vocab_.size());
-  word_.push_back("</s>");
-  for ( const auto pair : vocab_ ) {
+  _word_.reserve(_vocab_.size());
+  _word_.push_back("</s>");
+  for ( const auto pair : _vocab_ ) {
     if ( pair.first != "</s>" ) {
-      word_.push_back(pair.first);
+      _word_.push_back(pair.first);
     }
   }
 
   auto comp = [&]( const string_t &a, const string_t &b ) {
-    return (vocab_[a].count != vocab_[b].count) ? (vocab_[a].count > vocab_[b].count) : (a > b);
+    return (_vocab_[a].count != _vocab_[b].count) ? (_vocab_[a].count > _vocab_[b].count) : (a > b);
   };
-  std::sort(word_.begin()+1, word_.end(), comp);
+  std::sort(_word_.begin()+1, _word_.end(), comp);
 }
 
 }  // namespace hwe
