@@ -29,8 +29,8 @@ constexpr int kMaxVocalNum = 30000000;
 ///
 struct VocabWord {
   index_t count;
-  index_t id;
-  VocabWord( index_t id = -1 ) : count(0), id(id) {}
+  index_t idx;
+  VocabWord( index_t idx = -1 ) : count(0), idx(idx) {}
 };
 
 using VocabMap     = std::unordered_map<string_t, VocabWord>;
@@ -47,8 +47,8 @@ class VocabIterator : public WordList::const_iterator {
 
  public:
   using value_type = VocabPair;
-  using pointer = VocabPairPtr;
-  using reference = VocabPair;
+  using pointer    = VocabPairPtr;
+  using reference  = VocabPair;
 
  protected:
 
@@ -102,6 +102,7 @@ class VocabSet {
   index_t train_words_ = 0;
   index_t min_count_   = 5;
   index_t min_reduce_  = 2;
+  index_t debug_mode_  = 2;
 
  public:
 
@@ -113,8 +114,13 @@ class VocabSet {
   inline index_t train_words() noexcept { return train_words_; }
   inline index_t size() noexcept { return _vocab_.size(); }
 
+  inline void min_count(  const index_t min_count  ) noexcept { min_count_  = min_count; }
+  inline void min_reduce( const index_t min_reduce ) noexcept { min_reduce_ = min_reduce; }
+  inline void debug_mode( const index_t debug_mode ) noexcept { debug_mode_ = debug_mode; }
+
   inline VocabWord& operator[]( const string_t &word ) noexcept { return _vocab_[word]; }
   inline VocabWord& operator[]( string_t &&word ) noexcept { return _vocab_[word]; }
+  inline VocabWord& operator[]( const index_t idx ) noexcept { return _vocab_[_word_[idx]]; }
 
   // Read/save vocabulary
   void LearnVocab( const string_t &train_file ) noexcept;

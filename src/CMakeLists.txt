@@ -1,7 +1,8 @@
 # The CMake setting of 'src'
 
-add_executable(skipgram skipgram.cxx vocab.cxx def.cxx)
+add_executable(skipgram skipgram.cxx vocab.cxx)
 hwe_set_target(skipgram)
+hwe_set_target_omp(skipgram CXX)
 
 add_custom_target(run
 	COMMAND skipgram

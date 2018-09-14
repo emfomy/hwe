@@ -22,8 +22,6 @@ using real_t   = float;
 using index_t  = long long;
 using string_t = std::string;
 
-extern index_t debug_mode;
-
 }  // namespace hwe
 
 #endif  // HWE_DEF_HXX_

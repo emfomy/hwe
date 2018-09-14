@@ -25,13 +25,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#include "def.hxx"
-#include "vocab.hxx"
-
 #include <iostream>
 #include <fstream>
-
 #include <algorithm>
+
+#include "def.hxx"
+#include "vocab.hxx"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  The HWE namespace
@@ -46,10 +45,9 @@ void VocabSet::LearnVocab( const string_t &train_file ) noexcept {
   _word_.clear();
   train_words_ = 0;
 
-  std::ifstream fin;
-  fin.open(train_file);
+  std::ifstream fin(train_file);
   if ( !fin.is_open() ) {
-    std::cerr << "ERROR: training data file not found!" << std::endl;
+    std::cerr << "ERROR: Enable to open training file '" << train_file << "'!" << std::endl;
     exit(1);
   }
 
@@ -59,8 +57,8 @@ void VocabSet::LearnVocab( const string_t &train_file ) noexcept {
   while ( true ) {
     word = ReadWord(fin);
     if ( word == "" ) break;
-    if ( (debug_mode > 1) && (train_words_ % 100000 == 0) ) {
-      std::cout << (train_words_/1000) << "K\r" << std::flush;
+    if ( (debug_mode_ > 1) && (train_words_ % 100000 == 0) ) {
+      std::cout << "\r" << (train_words_/1000) << "k" << std::flush;
     }
 
     ++_vocab_[word].count;
@@ -73,7 +71,7 @@ void VocabSet::LearnVocab( const string_t &train_file ) noexcept {
 
   SortVocab();
 
-  if ( debug_mode > 0 ) {
+  if ( debug_mode_ > 0 ) {
     std::cout << "Vocab size:          " << _vocab_.size() << std::endl
               << "Words in train file: " << train_words_  << std::endl;
   }
@@ -87,10 +85,9 @@ void VocabSet::ReadVocab( const string_t &vocab_file ) noexcept {
   _word_.clear();
   train_words_ = 0;
 
-  std::ifstream fin;
-  fin.open(vocab_file);
+  std::ifstream fin(vocab_file);
   if ( !fin.is_open() ) {
-    std::cerr << "ERROR: Vocabulary file not found!" << std::endl;
+    std::cerr << "ERROR: Enable to open vocabulary file '" << vocab_file << "'!" << std::endl;
     exit(1);
   }
 
@@ -110,7 +107,7 @@ void VocabSet::ReadVocab( const string_t &vocab_file ) noexcept {
 
   SortVocab();
 
-  if ( debug_mode > 0 ) {
+  if ( debug_mode_ > 0 ) {
     std::cout << "Vocab size:          " << _vocab_.size() << std::endl
               << "Words in train file: " << train_words_  << std::endl;
   }
@@ -122,8 +119,7 @@ void VocabSet::ReadVocab( const string_t &vocab_file ) noexcept {
 void VocabSet::SaveVocab( const string_t &vocab_file ) noexcept {
   assert(_vocab_.size() == _word_.size());
 
-  std::ofstream fout;
-  fout.open(vocab_file);
+  std::ofstream fout(vocab_file);
   for ( const auto &word : _word_ ) {
     fout << word << " " << _vocab_.at(word).count << "\n";
   }
@@ -192,6 +188,10 @@ void VocabSet::SortVocab() noexcept {
     return (_vocab_[a].count != _vocab_[b].count) ? (_vocab_[a].count > _vocab_[b].count) : (a > b);
   };
   std::sort(_word_.begin()+1, _word_.end(), comp);
+
+  for ( auto i = 0u; i < _word_.size(); ++i ) {
+    _vocab_[_word_[i]].idx = i;
+  }
 }
 
 }  // namespace hwe

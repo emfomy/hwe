@@ -39,7 +39,7 @@ if(HWE_USE_PACKAGE)
   endforeach()
 endif()
 
-# Set target
+# Default
 find_library(
   M_LIBRARY
   NAMES m
@@ -70,6 +70,14 @@ set(DEFAULT_LIBRARY ${M_LIBRARY} ${PTHREAD_LIBRARY})
 function(HWE_SET_TARGET target)
   target_link_libraries(${target} ${DEFAULT_LIBRARY})
   set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS " -Wl,--no-as-needed")
+endfunction()
+
+# OpenMP
+find_package(OpenMP ${findtype})
+
+function(HWE_SET_TARGET_OMP target lang)
+  set_property(TARGET ${target} APPEND_STRING PROPERTY COMPILE_FLAGS " ${OpenMP_${lang}_FLAGS}")
+  set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS    " ${OpenMP_${lang}_FLAGS}")
 endfunction()
 
 # Doxygen
