@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \file       src/model/model.cxx
+/// \file       src/hwe/model/model.cxx
 /// \brief      The abstract model (implementation).
 ///
 /// \author     Mu Yang <<emfomy@gmail.com>>
@@ -25,14 +25,12 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#include "model.hxx"
+#include <hwe/model/model.hxx>
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 #include <random>
-
-#include "../def.hxx"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  The HWE namespace
@@ -58,11 +56,7 @@ void Model::TrainModel() noexcept {
 
   CheckFile();
 
-  cstart_ = GetTime();
   if (read_vocab_file.size()) vocab_.ReadVocab(read_vocab_file); else vocab_.LearnVocab(train_file);
-  cend_ = GetTime();
-  if ( debug_mode > 0 ) DisplayDuration(std::cout, "Load vocabulary", cstart_, cend_);
-
   if (save_vocab_file.size()) vocab_.SaveVocab(save_vocab_file);
   if (!output_file.size()) return;
 

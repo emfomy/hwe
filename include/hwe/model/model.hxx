@@ -12,9 +12,8 @@
 
 #include <vector>
 
-#include "../def.hxx"
-#include "../util/vocab.hxx"
-#include "../util/util.hxx"
+#include <hwe/def.hxx>
+#include <hwe/util.hxx>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  The HWE namespace

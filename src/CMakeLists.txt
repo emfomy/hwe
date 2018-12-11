@@ -1,17 +1,10 @@
 # The CMake setting of 'src'
 
-add_executable(skipgram main.cxx model/model.cxx util/vocab.cxx)
-hwe_set_target(skipgram)
-hwe_set_target_omp(skipgram CXX)
+# Set include paths
+include_directories("${PROJECT_SOURCE_DIR}/include")
 
-add_custom_target(run
-	COMMAND skipgram
-	DEPENDS skipgram
-	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-)
-
-add_custom_target(run2
-	COMMAND word2vec -train enwik8.txt -output enwik8.emb -save-vocab enwik8.vocab -cbow 0 -threads 32
-	DEPENDS word2vec
-	WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-)
+# libhwe
+file(GLOB_RECURSE files "${CMAKE_CURRENT_SOURCE_DIR}/hwe/*")
+add_library(hwe SHARED ${files})
+hwe_set_target(hwe)
+hwe_set_target_omp(hwe CXX)

@@ -24,4 +24,5 @@ include(cmake/package.cmake)
 # Add subdirectories
 add_subdirectory(ext)
 add_subdirectory(src)
+add_subdirectory(demo)
 add_subdirectory(doxygen)

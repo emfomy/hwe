@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \file       src/vocab.cxx
+/// \file       src/hwe/util/vocab.cxx
 /// \brief      The vocabulary (implementation).
 ///
 /// \author     Mu Yang <<emfomy@gmail.com>>
@@ -25,13 +25,11 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#include "vocab.hxx"
+#include <hwe/util/vocab.hxx>
 
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-
-#include "../def.hxx"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  The HWE namespace

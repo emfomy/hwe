@@ -1,14 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \file       src/main.cxx
-/// \brief      The main function.
+/// \file       demo/demo.cxx
+/// \brief      The demo code.
 ///
 /// \author     Mu Yang <<emfomy@gmail.com>>
 /// \author     Fann Jhih-Sheng <<fann1993814@gmail.com>>
 /// \copyright  Copyright (c) 2017-2018 Mu Yang & Fann Jhih-Sheng. All rights reserved.
 ///
 
-#include "def.hxx"
-#include "model/model.hxx"
+#include <hwe.hxx>
 
 using namespace hwe;
 
