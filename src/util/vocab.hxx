@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \file       src/vocab.hxx
+/// \file       src/util/vocab.hxx
 /// \brief      The vocabulary.
 ///
 /// \author     Mu Yang <<emfomy@gmail.com>>
@@ -7,14 +7,13 @@
 /// \copyright  Copyright (c) 2017-2018 Mu Yang & Fann Jhih-Sheng. All rights reserved.
 ///
 
-#ifndef HWE_VOCAB_HXX_
-#define HWE_VOCAB_HXX_
-
-#include "def.hxx"
+#ifndef HWE_UTIL_VOCAB_HXX_
+#define HWE_UTIL_VOCAB_HXX_
 
 #include <unordered_map>
 #include <vector>
 
+#include "../def.hxx"
 #include "util.hxx"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +29,7 @@ constexpr int kMaxVocalNum = 30000000;
 struct VocabWord {
   index_t count;
   index_t idx;
-  VocabWord( index_t idx = -1 ) : count(0), idx(idx) {}
+  VocabWord( index_t idx = -1 ) noexcept : count(0), idx(idx) {}
 };
 
 using VocabMap     = std::unordered_map<string_t, VocabWord>;
@@ -99,12 +98,15 @@ class VocabSet {
   /// The word list.
   WordList _word_;
 
-  index_t train_words_ = 0;
-  index_t min_count_   = 5;
-  index_t min_reduce_  = 2;
-  index_t debug_mode_  = 2;
+  index_t &train_words_;
+  int &min_count_;
+  int &min_reduce_;
+  int &debug_mode_;
 
  public:
+
+  inline VocabSet( index_t &train_words, int &min_count, int &min_reduce, int &debug_mode ) noexcept
+    : train_words_(train_words), min_count_(min_count), min_reduce_(min_reduce), debug_mode_(debug_mode) { train_words_ = 0; }
 
   inline bool ok() noexcept { return _vocab_.size() == _word_.size(); }
 
@@ -113,10 +115,6 @@ class VocabSet {
 
   inline index_t train_words() noexcept { return train_words_; }
   inline index_t size() noexcept { return _vocab_.size(); }
-
-  inline void min_count(  const index_t min_count  ) noexcept { min_count_  = min_count; }
-  inline void min_reduce( const index_t min_reduce ) noexcept { min_reduce_ = min_reduce; }
-  inline void debug_mode( const index_t debug_mode ) noexcept { debug_mode_ = debug_mode; }
 
   inline VocabWord& operator[]( const string_t &word ) noexcept { return _vocab_[word]; }
   inline VocabWord& operator[]( string_t &&word ) noexcept { return _vocab_[word]; }
@@ -138,4 +136,4 @@ class VocabSet {
 
 }  // namespace hwe
 
-#endif  // HWE_VOCAB_HXX_
+#endif  // HWE_UTIL_VOCAB_HXX_

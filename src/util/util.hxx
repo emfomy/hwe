@@ -7,15 +7,16 @@
 /// \copyright  Copyright (c) 2017-2018 Mu Yang & Fann Jhih-Sheng. All rights reserved.
 ///
 
-#ifndef HWE_UTIL_HXX_
-#define HWE_UTIL_HXX_
+#ifndef HWE_UTIL_UTIL_HXX_
+#define HWE_UTIL_UTIL_HXX_
 
 #include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <vector>
 #include <chrono>
-#include "def.hxx"
+
+#include "../def.hxx"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  The HWE namespace
@@ -104,4 +105,4 @@ inline void DisplayDuration( std::ostream &os, const string_t &name, const timep
 
 }  // namespace hwe
 
-#endif  // HWE_UTIL_HXX_
+#endif  // HWE_UTIL_UTIL_HXX_
