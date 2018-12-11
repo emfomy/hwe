@@ -49,7 +49,7 @@ std::vector<real_t> syn0, syn1, syn1neg;
 std::vector<int> unigram_table;
 
 index_t layer1_size = 100, train_words = 0, word_count_actual = 0, iter = 5, file_size = 0;
-int binary = 0, cbow = 1, debug_mode = 2, window = 5, min_count = 5, num_threads = 12, min_reduce = 1, negative = 5;
+int binary = 0, debug_mode = 2, window = 5, min_count = 5, num_threads = 12, min_reduce = 1, negative = 5;
 real_t alpha = 0.025, starting_alpha, sample = 1e-3;
 timepoint_t cstart, cend;
 
@@ -157,7 +157,7 @@ void TrainModelThread( const index_t id) {
         printf("\rAlpha: %f  Progress: %.2f%%  Words/thread/sec: %.2fk  ",
           alpha,
           word_count_actual / (real_t)(iter * train_words + 1) * 100.0,
-          word_count_actual / GetTimeDuration(cstart, cnow) / 1000.0);
+          word_count_actual / (real_t)num_threads / GetTimeDuration(cstart, cnow) / 1000.0);
         fflush(stdout);
       }
       alpha = starting_alpha * (1 - word_count_actual / (real_t)(iter * train_words + 1));
@@ -279,6 +279,7 @@ int main() {
   train_file      = "enwik8.txt";
   output_file     = "enwik8.emb";
   save_vocab_file = "enwik8.vocab";
+  num_threads     = 32;
 
   TrainModel();
 

@@ -95,7 +95,7 @@ inline timepoint_t GetTime() {
 }
 
 inline double GetTimeDuration( const timepoint_t &cstart, const timepoint_t &cend ) {
-  return std::chrono::duration_cast<std::chrono::microseconds>(cend-cstart).count() / 1000000.0;
+  return std::chrono::duration<double>(cend-cstart).count();
 }
 
 inline void DisplayDuration( std::ostream &os, const string_t &name, const timepoint_t &cstart, const timepoint_t &cend ) {

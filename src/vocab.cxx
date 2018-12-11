@@ -68,6 +68,7 @@ void VocabSet::LearnVocab( const string_t &train_file ) noexcept {
       ReduceVocab();
     }
   }
+  std::cout << "\r";
 
   SortVocab();
 
@@ -104,6 +105,7 @@ void VocabSet::ReadVocab( const string_t &vocab_file ) noexcept {
     train_words_ += count;
     fin.get();
   }
+  std::cout << "\r";
 
   SortVocab();
 
