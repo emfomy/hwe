@@ -11,6 +11,8 @@
 #define HWE_UTIL_HXX_
 
 #include <hwe/util/vocab.hxx>
+#include <hwe/util/reader.hxx>
+#include <hwe/util/word.hxx>
 #include <hwe/util/util.hxx>
 
 #endif  // HWE_UTIL_HXX_

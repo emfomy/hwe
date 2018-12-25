@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \file       src/model/model.hxx
+/// \file       include/hwe/model/model.hxx
 /// \brief      The abstract model.
 ///
 /// \author     Mu Yang <<emfomy@gmail.com>>
@@ -30,9 +30,12 @@ constexpr real_t kMaxExp         = 6;
 ///
 class Model {
 
+ public:
+
+  VocabSet vocab;
+
  protected:
 
-  VocabSet vocab_;
   ExpTable exp_table_;
 
   std::vector<real_t> syn0_;

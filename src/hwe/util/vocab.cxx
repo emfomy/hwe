@@ -54,7 +54,7 @@ void VocabSet::LearnVocab( const string_t &train_file ) noexcept {
   string_t word;
 
   while ( true ) {
-    word = ReadWord(fin);
+    ReadWord(word, fin);
     if ( word == "" ) break;
     if ( (debug_mode_ > 1) && (train_words_ % 100000 == 0) ) {
       std::cout << "\r" << (train_words_/1000) << "k" << std::flush;
@@ -96,7 +96,7 @@ void VocabSet::ReadVocab( const string_t &vocab_file ) noexcept {
   index_t count;
 
   while ( true ) {
-    word = ReadWord(fin);
+    ReadWord(word, fin);
     if ( word == "" ) break;
 
     fin >> count;
@@ -129,24 +129,23 @@ void VocabSet::SaveVocab( const string_t &vocab_file ) noexcept {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Reads a single word from a file, assuming space + tab + EOL to be word boundaries.
 ///
-string_t VocabSet::ReadWord( std::istream &fin ) noexcept {
-  string_t word;
+void VocabSet::ReadWord( string_t &word, std::istream &fin ) noexcept {
   while ( fin.good() ) {
     char ch = fin.peek();
     if ( ch == '\n' ) {
       fin.get();
       word = "</s>";
-      break;
-    } else if ( isspace(ch) ) {
+      return;
+    } else if ( std::isspace(ch) ) {
       fin.get();
       continue;
     }
     else {
       fin >> word;
-      break;
+      return;
     }
   }
-  return word;
+  word = "";
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \file       include/hwe.cxx
-/// \brief      The definitions.
+/// \file       include/hwe.hxx
+/// \brief      The HWE header.
 ///
 /// \author     Mu Yang <<emfomy@gmail.com>>
 /// \author     Fann Jhih-Sheng <<fann1993814@gmail.com>>

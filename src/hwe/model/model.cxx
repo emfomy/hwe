@@ -41,7 +41,7 @@ namespace hwe {
 /// Constructor.
 ///
 Model::Model() noexcept
-  : vocab_(train_words_, min_count, min_reduce, debug_mode),
+  : vocab(train_words_, min_count, min_reduce, debug_mode),
     exp_table_(kMaxExp, kExpTableSize) {
 }
 
@@ -56,8 +56,8 @@ void Model::TrainModel() noexcept {
 
   CheckFile();
 
-  if (read_vocab_file.size()) vocab_.ReadVocab(read_vocab_file); else vocab_.LearnVocab(train_file);
-  if (save_vocab_file.size()) vocab_.SaveVocab(save_vocab_file);
+  if (read_vocab_file.size()) vocab.ReadVocab(read_vocab_file); else vocab.LearnVocab(train_file);
+  if (save_vocab_file.size()) vocab.SaveVocab(save_vocab_file);
   if (!output_file.size()) return;
 
   InitNet();
@@ -110,14 +110,15 @@ void Model::TrainModelThread( const index_t id ) noexcept {
       if (alpha < starting_alpha * 0.0001) alpha = starting_alpha * 0.0001;
     }
 
+    string_t word;
     if (sentence_length == 0) {
       while (1) {
-        auto word = vocab_.ReadWord(fin);
+        vocab.ReadWord(word, fin);
         if ( word == "" ) break;
-        if ( vocab_._vocab().count(word) == 0 ) continue;
+        if ( vocab._vocab().count(word) == 0 ) continue;
         word_count++;
         if ( word == "</s>" ) break;
-        auto &vw = vocab_[word];
+        auto &vw = vocab[word];
 
         // The subsampling randomly discards frequent words while keeping the ranking same
         if ( sample > 0 ) {
@@ -195,19 +196,19 @@ void Model::InitUnigramTable() noexcept {
 
   unigram_table_.resize(kTableSize);
 
-  auto it = vocab_.begin();
-  for ( ++it; it != vocab_.end(); ++it ) {
+  auto it = vocab.begin();
+  for ( ++it; it != vocab.end(); ++it ) {
     train_words_pow += std::pow(it->second.count, power);
   }
 
   index_t i = 1;
-  double d1 = std::pow(vocab_[i].count, power) / train_words_pow;
+  double d1 = std::pow(vocab[i].count, power) / train_words_pow;
   for ( auto a = 0u; a < unigram_table_.size(); ++a ) {
     unigram_table_[a] = i;
     if (a / (double)(unigram_table_.size()) > d1) {
       ++i;
-      d1 += std::pow(vocab_[i].count, power) / train_words_pow;
-      if (i >= vocab_.size()) i = vocab_.size() - 1;
+      d1 += std::pow(vocab[i].count, power) / train_words_pow;
+      if (i >= vocab.size()) i = vocab.size() - 1;
     }
   }
 }
@@ -216,11 +217,11 @@ void Model::InitUnigramTable() noexcept {
 /// Initialize network.
 ///
 void Model::InitNet() noexcept {
-  assert(vocab_.ok());
+  assert(vocab.ok());
 
-  syn0_.resize(vocab_.size() * layer1_size);
-  syn1_.resize(vocab_.size() * layer1_size, 0.0);
-  syn1neg_.resize(vocab_.size() * layer1_size, 0.0);
+  syn0_.resize(vocab.size() * layer1_size);
+  syn1_.resize(vocab.size() * layer1_size, 0.0);
+  syn1neg_.resize(vocab.size() * layer1_size, 0.0);
 
   std::minstd_rand engine;
   std::uniform_real_distribution<> dist(-0.5/layer1_size, 0.5/layer1_size);
@@ -239,8 +240,8 @@ void Model::SaveEmbed() noexcept {
   }
 
   // Save the word vectors
-  fout << vocab_.size() << " " << layer1_size << '\n';
-  for ( const auto &pair : vocab_ ) {
+  fout << vocab.size() << " " << layer1_size << '\n';
+  for ( const auto &pair : vocab ) {
     fout << pair.first;
     if ( binary ) {
       fout << " ";

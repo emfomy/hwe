@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \file       src/util/vocab.hxx
+/// \file       include/hwe/util/vocab.hxx
 /// \brief      The vocabulary.
 ///
 /// \author     Mu Yang <<emfomy@gmail.com>>
@@ -124,7 +124,7 @@ class VocabSet {
   void LearnVocab( const string_t &train_file ) noexcept;
   void ReadVocab( const string_t &vocab_file ) noexcept;
   void SaveVocab( const string_t &vocab_file ) noexcept;
-  string_t ReadWord( std::istream &fin ) noexcept;
+  void ReadWord( string_t &word, std::istream &fin ) noexcept;
   void ReduceVocab() noexcept;
   void SortVocab() noexcept;
 

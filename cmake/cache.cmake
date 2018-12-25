@@ -7,7 +7,7 @@ endif()
 
 # Set default flags
 set(CMAKE_C_FLAGS   "-std=c11   -Wall -Wextra -pedantic" CACHE STRING "Flags used by the compiler during all build types.")
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -pedantic" CACHE STRING "Flags used by the compiler during all build types.")
+set(CMAKE_CXX_FLAGS "-std=c++14 -Wall -Wextra -pedantic" CACHE STRING "Flags used by the compiler during all build types.")
 
 # Set core flags
 set(CMAKE_C_FLAGS_SIMPLE   "-O2 -g" CACHE STRING "Flags used by the compiler during simple builds.")
