@@ -33,6 +33,6 @@ unzip demo/enwik8
 * [Jhih-Sheng Fan, Mu Yang, Peng-Hsuan Li and Wei-Yun Ma, “HWE: Word Embedding with Heterogeneous Features”, ICSC2019](https://muyang.pro/file/paper/icsc_2019_hwe.pdf)
 
 # License
-[![License: CC BY-NC-SA 4.0](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/) Copyright (c) 2017-2018 Mu Yang & Fann Jhih-Sheng under the [CC-BY-NC-SA 4.0 License](LICENSE.md). All rights reserved.
+[![License: CC BY-NC-SA 4.0](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/) Copyright (c) 2017-2018 Mu Yang & Fann Jhih-Sheng under the [CC-BY-NC-SA 4.0 License](https://creativecommons.org/licenses/by-nc-sa/4.0/). All rights reserved.
 
 \include LICENSE.md
