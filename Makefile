@@ -9,8 +9,8 @@ all: hwe run
 hwe: src/hwe.c
 	$(CC) $^ -o $@ $(CFLAGS)
 
-demo/enwik8: demo/enwik8.zip
-	unzip $< -d demo
+demo/enwik8: | demo/enwik8.zip
+	unzip $| -d demo
 
 demo/enwik8.zip:
 	wget http://cs.fit.edu/~mmahoney/compression/enwik8.zip -O $@
