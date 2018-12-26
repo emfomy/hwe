@@ -137,8 +137,7 @@ void ReadWord(char *word, FILE *fin) {
   int a = 0, ch;
   while (!feof(fin)) {
     ch = fgetc(fin);
-    if (ch == 13) continue;
-    if ((ch == ' ') || (ch == '\t') || (ch == '\n')) {
+    if ( ch <= ' ' || ch == 127 ) {
       if (a > 0) {
         if (ch == '\n') ungetc(ch, fin);
         break;
@@ -330,7 +329,7 @@ void LearnVocabFromTrainFile() {
     }
     train_words++;
     if ((debug_mode > 1) && (train_words % 100000 == 0)) {
-      printf("%lldK%c", train_words / 1000, 13);
+      printf("%lldK\r", train_words / 1000);
       fflush(stdout);
     }
     i = SearchVocab(word);
@@ -343,6 +342,7 @@ void LearnVocabFromTrainFile() {
     else vocab[i].cn++;
     if (vocab_size > vocab_hash_size * 0.7) ReduceVocab();
   }
+  printf("\n");
 
   if (feature_mode == 2) {
     fin2 = fopen(knowledge_file, "rb");
@@ -352,7 +352,7 @@ void LearnVocabFromTrainFile() {
     }
     int idx = 0;
     int WordNum = 0;
-    long long TempFeatureID;
+    long long TempFeatureID = 0;
     while (1) { //Create Feature in Dict
       ReadWord(word, fin2);
       if (feof(fin2)) break;
@@ -386,7 +386,7 @@ void LearnVocabFromTrainFile() {
     SortVocab(); //Remove less Feature
     fseek(fin2, 0, SEEK_SET);
     idx = 0;
-    long long FeatureID;
+    long long FeatureID = 0;
     while (1) { //Establish Word Link to Feature
       ReadWord(word, fin2);
       if (feof(fin2)) break;
@@ -511,7 +511,7 @@ void InitNet() {
 }
 
 void *TrainModelThread(void *id) {
-  long long a, b, d, word, last_word, sentence_length = 0, sentence_position = 0, feature, *IndexOfPair;
+  long long a, b, d, word, last_word, sentence_length = 0, sentence_position = 0, feature = 0, *IndexOfPair;
   long long word_count = 0, last_word_count = 0, sen[MAX_SENTENCE_LENGTH + 1], sen_pos[MAX_SENTENCE_LENGTH + 1];
   long long l1, l2, c, target, label, local_iter = iter;
   unsigned long long next_random = (long long)id;
@@ -530,7 +530,7 @@ void *TrainModelThread(void *id) {
       last_word_count = word_count;
       if ((debug_mode > 1)) {
         now = clock();
-        printf("%cAlpha: %f  Progress: %.2f%%  Words/thread/sec: %.2fk  ", 13, alpha,
+        printf("\rAlpha: %f  Progress: %.2f%%  Words/thread/sec: %.2fk  ", alpha,
           word_count_actual / (real)(iter * train_words + 1) * 100,
           word_count_actual / ((real)(now - start + 1) / (real)CLOCKS_PER_SEC * 1000));
         fflush(stdout);
@@ -722,6 +722,7 @@ void TrainModel() {
 
   for (a = 0; a < num_threads; a++) pthread_create(&pt[a], NULL, TrainModelThread, (void *)a);
   for (a = 0; a < num_threads; a++) pthread_join(pt[a], NULL);
+  printf("\n");
 
   char inputvec[MAX_STRING] = {'\0'};
   char outputvec[MAX_STRING] = {'\0'};
@@ -865,8 +866,8 @@ int main(int argc, char **argv) {
     printf("\t-knfile <file>\n");
     printf("\t\tThe sense-words file will be read from <file>\n");
     printf("\nExamples:\n");
-    printf("./HWE -train data.txt -output vec.txt -size 200 -window 5 -sample 1e-4 -negative 5 -binary 0 "
-                 "-fmode 2 -knfile senses.txt -iter 3\n\n");
+    printf("%s -train data.txt -output vec.txt -size 200 -window 5 -sample 1e-4 -negative 5 -binary 0 "
+              "-fmode 2 -knfile senses.txt -iter 3\n\n", argv[0]);
     return 0;
   }
   output_file[0] = 0;
@@ -898,6 +899,5 @@ int main(int argc, char **argv) {
     expTable[i] = expTable[i] / (expTable[i] + 1);                   // Precompute f(x) = x / (x + 1)
   }
   TrainModel();
-  printf("\n");
   return 0;
 }
