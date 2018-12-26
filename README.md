@@ -22,7 +22,10 @@ make hwe
 ## Example
 
 ```
-./hwe -train demo/enwik8 -output run/enwik8.emb -size 100 -window 5 -sample 1e-4 -negative 5 -binary 0 -fmode 2 -knfile demo/wordnetlower.tree -iter 2 -threads 32
+wget http://cs.fit.edu/~mmahoney/compression/enwik8.zip
+unzip demo/enwik8
+
+./hwe -train enwik8 -output enwik8.emb -size 100 -window 5 -sample 1e-4 -negative 5 -binary 0 -fmode 2 -knfile demo/wordnetlower.tree -iter 2 -threads 32
 ```
 
 # Reference
