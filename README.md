@@ -85,7 +85,7 @@ unzip demo/enwik8
 ```
 
 ## Author
-* Fann Jhih-Sheng <<fann1993814@gmail.com>>
+* Fan Jhih-Sheng <<fann1993814@gmail.com>>
 * Mu Yang <<emfomy@gmail.com>>
 
 # Reference
