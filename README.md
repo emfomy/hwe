@@ -70,7 +70,7 @@ make hwe
     Enable the Feature mode (default = 0)
         0 = only using skip-gram 
         1 = predicting self-feature of sequential feature tag 
-        2 = predicting self-feature of global feature table)
+        2 = predicting self-feature of global feature table
 -knfile <file>
     The sense-words file will be read from <file>
 ```
