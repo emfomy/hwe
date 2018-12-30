@@ -21,8 +21,8 @@ This library is a C implementation of the Heterogeneous Word Embedding (HWE), wh
 - Knowledge file: Each row contains a sense and corresponding words.
 	- Fomat: `<Sense> <Word List>`
 	- Example:
-	-- ```SENSE_FRUIT apple banana grape```
-    -- ```SENSE_ANIMAL tiger monkey```
+		- Line1: ```SENSE_FRUIT apple banana grape```
+		- Line2: ```SENSE_ANIMAL tiger monkey```
 
 ## Attention
 - The words/features are represented in lower/upper-cases respectively.
