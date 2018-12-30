@@ -68,8 +68,8 @@ make hwe
     The vocabulary will be read from <file>, not constructed from the training data
 -fmode <int>
     Enable the Feature mode (default = 0)
-        0 = only using skip-gram 
-        1 = predicting self-feature of sequential feature tag 
+        0 = only using skip-gram
+        1 = predicting self-feature of sequential feature tag
         2 = predicting self-feature of global feature table
 -knfile <file>
     The sense-words file will be read from <file>
@@ -93,4 +93,4 @@ unzip demo/enwik8
 * [Jhih-Sheng Fan, Mu Yang, Peng-Hsuan Li and Wei-Yun Ma, “HWE: Word Embedding with Heterogeneous Features”, ICSC2019](https://muyang.pro/file/paper/icsc_2019_hwe.pdf)
 
 # License
-[![License: CC BY-NC-SA 4.0](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/) Copyright (c) 2017-2018 Mu Yang & Fann Jhih-Sheng under the [CC-BY-NC-SA 4.0 License](https://creativecommons.org/licenses/by-nc-sa/4.0/). All rights reserved.
+[![License: CC BY-NC-SA 4.0](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/) Copyright (c) 2017-2018 Fann Jhih-Sheng & Mu Yang under the [CC-BY-NC-SA 4.0 License](https://creativecommons.org/licenses/by-nc-sa/4.0/). All rights reserved.
