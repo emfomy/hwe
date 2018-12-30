@@ -60,7 +60,7 @@ struct vocab_word *vocab;
 int binary = 0, debug_mode = 2, window = 5, min_count = 5, num_threads = 12, min_reduce = 1;
 int *vocab_hash;
 long long vocab_max_size = 1000, vocab_size = 0, layer1_size = 100;
-long long train_words = 0, word_count_actual = 0, iter = 5, file_size = 0, classes = 0;
+long long train_words = 0, word_count_actual = 0, iter = 5, file_size = 0;
 real alpha = 0.025, starting_alpha, sample = 1e-3;
 real *syn0, *syn1neg, *expTable;
 clock_t start;
@@ -735,79 +735,27 @@ void TrainModel() {
   fo_i = fopen(inputvec, "wb");
   fo_o = fopen(outputvec, "wb");
 
-  if (classes == 0) {
-
-    // Save the word vectors(syn0)
-    fprintf(fo_i, "%lld %lld\n", vocab_size - NumberOfFeature, layer1_size);
-    for (a = 0; a < vocab_size - NumberOfFeature; a++) {
-      fprintf(fo_i, "%s ", vocab[a].word);
-      if (binary) for (b = 0; b < layer1_size; b++) fwrite(&syn0[a * layer1_size + b], sizeof(real), 1, fo_i);
-      else for (b = 0; b < layer1_size; b++) fprintf(fo_i, "%lf ", syn0[a * layer1_size + b]);
-      fprintf(fo_i, "\n");
-    }
-
-    fclose(fo_i);
-
-    // Save the word vectors(syn1neg)
-    fprintf(fo_o, "%lld %lld\n", vocab_size, layer1_size);
-    for (a = 0; a < vocab_size; a++) {
-      fprintf(fo_o, "%s ", vocab[a].word);
-      if (binary) for (b = 0; b < layer1_size; b++) fwrite(&syn1neg[a * layer1_size + b], sizeof(real), 1, fo_o);
-      else for (b = 0; b < layer1_size; b++) fprintf(fo_o, "%lf ", syn1neg[a * layer1_size + b]);
-      fprintf(fo_o, "\n");
-    }
-
-    fclose(fo_o);
+  // Save the word vectors(syn0)
+  fprintf(fo_i, "%lld %lld\n", vocab_size - NumberOfFeature, layer1_size);
+  for (a = 0; a < vocab_size - NumberOfFeature; a++) {
+    fprintf(fo_i, "%s ", vocab[a].word);
+    if (binary) for (b = 0; b < layer1_size; b++) fwrite(&syn0[a * layer1_size + b], sizeof(real), 1, fo_i);
+    else for (b = 0; b < layer1_size; b++) fprintf(fo_i, "%lf ", syn0[a * layer1_size + b]);
+    fprintf(fo_i, "\n");
   }
-  else {
 
-    fo = fopen(output_file, "wb");
+  fclose(fo_i);
 
-    // Run K-means on the word vectors
-    int clcn = classes, iter = 10, closeid;
-    int *centcn = (int *)malloc(classes * sizeof(int));
-    int *cl = (int *)calloc(vocab_size - NumberOfFeature, sizeof(int));
-    real closev, x;
-    real *cent = (real *)calloc(classes * layer1_size, sizeof(real));
-    for (a = 0; a < vocab_size - NumberOfFeature; a++) cl[a] = a % clcn;
-    for (a = 0; a < iter; a++) {
-      for (b = 0; b < clcn * layer1_size; b++) cent[b] = 0;
-      for (b = 0; b < clcn; b++) centcn[b] = 1;
-      for (c = 0; c < vocab_size - NumberOfFeature; c++) {
-        for (d = 0; d < layer1_size; d++) cent[layer1_size * cl[c] + d] += syn0[c * layer1_size + d];
-        centcn[cl[c]]++;
-      }
-      for (b = 0; b < clcn; b++) {
-        closev = 0;
-        for (c = 0; c < layer1_size; c++) {
-          cent[layer1_size * b + c] /= centcn[b];
-          closev += cent[layer1_size * b + c] * cent[layer1_size * b + c];
-        }
-        closev = sqrt(closev);
-        for (c = 0; c < layer1_size; c++) cent[layer1_size * b + c] /= closev;
-      }
-      for (c = 0; c < vocab_size - NumberOfFeature; c++) {
-        closev = -10;
-        closeid = 0;
-        for (d = 0; d < clcn; d++) {
-          x = 0;
-          for (b = 0; b < layer1_size; b++) x += cent[layer1_size * d + b] * syn0[c * layer1_size + b];
-          if (x > closev) {
-            closev = x;
-            closeid = d;
-          }
-        }
-        cl[c] = closeid;
-      }
-    }
-    // Save the K-means classes
-    for (a = 0; a < vocab_size - NumberOfFeature; a++) fprintf(fo, "%s %d\n", vocab[a].word, cl[a]);
-    free(centcn);
-    free(cent);
-    free(cl);
-
-    fclose(fo);
+  // Save the word vectors(syn1neg)
+  fprintf(fo_o, "%lld %lld\n", vocab_size, layer1_size);
+  for (a = 0; a < vocab_size; a++) {
+    fprintf(fo_o, "%s ", vocab[a].word);
+    if (binary) for (b = 0; b < layer1_size; b++) fwrite(&syn1neg[a * layer1_size + b], sizeof(real), 1, fo_o);
+    else for (b = 0; b < layer1_size; b++) fprintf(fo_o, "%lf ", syn1neg[a * layer1_size + b]);
+    fprintf(fo_o, "\n");
   }
+
+  fclose(fo_o);
 }
 
 int ArgPos(char *str, int argc, char **argv) {
@@ -848,9 +796,7 @@ int main(int argc, char **argv) {
     printf("\t-min-count <int>\n");
     printf("\t\tThis will discard words that appear less than <int> times; default is 5\n");
     printf("\t-alpha <float>\n");
-    printf("\t\tSet the starting learning rate; default is 0.025 for skip-gram and 0.05 for CBOW\n");
-    printf("\t-classes <int>\n");
-    printf("\t\tOutput word classes rather than word vectors; default number of classes is 0 (vectors are written)\n");
+    printf("\t\tSet the starting learning rate; default is 0.025\n");
     printf("\t-debug <int>\n");
     printf("\t\tSet the debug mode (default = 2 = more info during training)\n");
     printf("\t-binary <int>\n");
@@ -887,7 +833,6 @@ int main(int argc, char **argv) {
   if ((i = ArgPos((char *)"-threads", argc, argv)) > 0) num_threads = atoi(argv[i + 1]);
   if ((i = ArgPos((char *)"-iter", argc, argv)) > 0) iter = atoi(argv[i + 1]);
   if ((i = ArgPos((char *)"-min-count", argc, argv)) > 0) min_count = atoi(argv[i + 1]);
-  if ((i = ArgPos((char *)"-classes", argc, argv)) > 0) classes = atoi(argv[i + 1]);
   if ((i = ArgPos((char *)"-fmode", argc, argv)) > 0) feature_mode = atoi(argv[i + 1]);
   if ((i = ArgPos((char *)"-knfile", argc, argv)) > 0) strcpy(knowledge_file, argv[i + 1]);
 
